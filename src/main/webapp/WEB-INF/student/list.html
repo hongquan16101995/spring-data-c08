@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+      table {
+        width: 600px;
+      }
+
+      table, a, h1 {
+        margin: auto;
+      }
+
+      table, tr, th, td {
+        border: 1px solid;
+        border-collapse: collapse;
+      }
+    </style>
+</head>
+<body>
+<a th:href="@{/api/students/create}">Create new</a>
+<h1>List Student</h1>
+<a th:href="@{/api/students/sort}"><button>Sort</button></a>
+<a href="/api/students/gender?g=male"><button>Nam</button></a>
+<a th:href="@{'/api/students/gender?g=female'}"><button>Nữ</button></a>
+<a th:href="@{/api/students/sort}"><button>Khác</button></a>
+<table>
+  <tr>
+    <th>STT</th>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Age</th>
+    <th>Gender</th>
+    <th>Address</th>
+    <th colspan="2">Action</th>
+  </tr>
+  <tr th:each="s, status : ${students}" >
+    <td th:text="${status.count}"></td>
+    <td th:text="${s.id}"></td>
+    <td th:text="${s.name}"></td>
+    <td th:text="${s.age}"></td>
+    <td th:text="${s.gender}"></td>
+    <td th:text="${s.address}"></td>
+    <td>
+      <a th:href="@{/api/students/update/{id}(id=${s.id})}">
+        <button>Update</button>
+      </a>
+    </td>
+    <td>
+      <a th:href="@{/api/students/delete/__${s.id}__}">
+        <button>Delete</button>
+      </a>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

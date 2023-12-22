@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Form create</h1>
+<form method="post">
+  <label for="id">Id</label>
+  <input type="text" id="id" name="id">
+  <label for="name">Name</label>
+  <input type="text" id="name" name="name">
+  <label for="age">Age</label>
+  <input type="text" id="age" name="age">
+  <label for="gender">Gender</label>
+  <select name="gender" id="gender">
+    <option value="male">Nam</option>
+    <option value="female">Nữ</option>
+    <option value="other">Khác</option>
+  </select>
+  <label for="address">Address</label>
+  <textarea id="address" name="address" ></textarea>
+  <button type="submit">Create</button>
+</form>
+</body>
+</html>
