@@ -20,6 +20,10 @@
 </head>
 <body>
 <a th:href="@{/api/students/create}">Create new</a>
+<form th:action="@{/api/students/search}" method="post">
+  <input type="text" name="name">
+  <button type="submit">Search</button>
+</form>
 <h1>List Student</h1>
 <a th:href="@{/api/students/sort}"><button>Sort</button></a>
 <a href="/api/students/gender?g=male"><button>Nam</button></a>

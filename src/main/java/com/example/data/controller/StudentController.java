@@ -22,21 +22,28 @@ public class StudentController {
 
     @GetMapping("/create")
     public ModelAndView createGet() {
-        ModelAndView modelAndView = new ModelAndView("/student/create");
+        ModelAndView modelAndView = new ModelAndView("/student/form");
         modelAndView.addObject("student", new Student());
         return modelAndView;
     }
 
-//    @PostMapping("/create")
-//    public String createPost(@ModelAttribute Student student) {
-//        studentService.create(student);
-//        return "redirect:/api/students";
-//    }
-//
+    @PostMapping("/create")
+    public String createPost(@ModelAttribute Student student) {
+        studentService.save(student);
+        return "redirect:/api/students";
+    }
+
+    @PostMapping("/search")
+    public ModelAndView findName(@RequestParam String name) {
+        ModelAndView modelAndView = new ModelAndView("/student/list");
+        modelAndView.addObject("students", studentService.findAllByName(name));
+        return modelAndView;
+    }
+
     @GetMapping("/update/{id}")
     public ModelAndView updateGet(@PathVariable Long id) {
         Student student = studentService.findById(id);
-        ModelAndView modelAndView = new ModelAndView("/student/update");
+        ModelAndView modelAndView = new ModelAndView("/student/form");
         if (student != null) {
             modelAndView.addObject("student", student);
         } else {
@@ -44,34 +51,35 @@ public class StudentController {
         }
         return modelAndView;
     }
-//
-//    @PostMapping("/update/{id}")
-//    public String updatePost(@PathVariable Long id,
-//                             @ModelAttribute Student student) {
-//        Student detail = studentService.findById(id);
-//        if (detail != null) {
-//            studentService.update(student, id);
-//        }
-//        return "redirect:/api/students";
-//    }
-//
-//    @GetMapping("/delete/{id}")
-//    public String delete(@PathVariable Long id) {
-//        studentService.delete(id);
-//        return "redirect:/api/students";
-//    }
-//
-//    @GetMapping("/sort")
-//    public ModelAndView sort() {
-//        ModelAndView modelAndView = new ModelAndView("/student/list");
-//        modelAndView.addObject("students", studentService.sortByAge());
-//        return modelAndView;
-//    }
-//
-//    @GetMapping("/gender")
-//    public ModelAndView filter(@RequestParam("g") String gender) {
-//        ModelAndView modelAndView = new ModelAndView("/student/list");
-//        modelAndView.addObject("students", studentService.findAllByGender(gender));
-//        return modelAndView;
-//    }
+
+    @PostMapping("/update/{id}")
+    public String updatePost(@PathVariable Long id,
+                             @ModelAttribute Student student) {
+        Student detail = studentService.findById(id);
+        if (detail != null) {
+            student.setId(id);
+            studentService.save(student);
+        }
+        return "redirect:/api/students";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        studentService.delete(id);
+        return "redirect:/api/students";
+    }
+
+    @GetMapping("/sort")
+    public ModelAndView sort() {
+        ModelAndView modelAndView = new ModelAndView("/student/list");
+        modelAndView.addObject("students", studentService.sortByAge());
+        return modelAndView;
+    }
+
+    @GetMapping("/gender")
+    public ModelAndView filter(@RequestParam("g") String gender) {
+        ModelAndView modelAndView = new ModelAndView("/student/list");
+        modelAndView.addObject("students", studentService.findAllByGender(gender));
+        return modelAndView;
+    }
 }

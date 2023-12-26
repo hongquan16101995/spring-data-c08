@@ -5,11 +5,9 @@
   <title>Title</title>
 </head>
 <body>
-<h1>Form update</h1>
+<h1>Form student</h1>
 <p th:text="${message}"></p>
 <form method="post" th:object="${student}">
-  <label for="id">Id</label>
-  <input type="text" id="id" th:field="*{id}">
   <label for="name">Name</label>
   <input type="text" id="name" th:field="*{name}">
   <label for="age">Age</label>
@@ -22,7 +20,8 @@
   </select>
   <label for="address">Address</label>
   <textarea id="address" th:field="*{address}"></textarea>
-  <button type="submit">Update</button>
+  <button type="submit">Save</button>
 </form>
+<button><a th:href="@{/api/student}">Back</a></button>
 </body>
 </html>
