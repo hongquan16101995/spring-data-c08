@@ -1,6 +1,7 @@
 package com.example.data.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 // đánh dấu đây là 1 entity (thực thể), được quản lý bới EntityManager
 @Entity
@@ -10,8 +11,14 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotEmpty
     private String name;
+
+    @Max(value = 60)
+    @Min(value = 18)
     private Long age;
+
     private String gender;
     private String address;
 

@@ -1,17 +1,32 @@
 package com.example.data.controller;
 
+import com.example.data.model.Classroom;
 import com.example.data.model.Student;
+import com.example.data.service.IClassroomService;
 import com.example.data.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/api/students")
 public class StudentController {
     @Autowired
     private IStudentService studentService;
+
+    @Autowired
+    private IClassroomService classroomService;
+
+    @ModelAttribute("classrooms")
+    private Iterable<Classroom> getClassrooms() {
+        return classroomService.findAll();
+    }
 
     @GetMapping
     public ModelAndView findAll() {
@@ -28,9 +43,18 @@ public class StudentController {
     }
 
     @PostMapping("/create")
-    public String createPost(@ModelAttribute Student student) {
-        studentService.save(student);
-        return "redirect:/api/students";
+    public ModelAndView createPost(@Valid @ModelAttribute Student student,
+                             BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            ModelAndView modelAndView = new ModelAndView("/student/form");
+            modelAndView.addObject("student", student);
+            return modelAndView;
+        } else {
+            studentService.save(student);
+            ModelAndView modelAndView = new ModelAndView("/student/list");
+            modelAndView.addObject("student", studentService.findAll());
+            return modelAndView;
+        }
     }
 
     @PostMapping("/search")
@@ -42,7 +66,7 @@ public class StudentController {
 
     @GetMapping("/update/{id}")
     public ModelAndView updateGet(@PathVariable Long id) {
-        Student student = studentService.findById(id);
+        Student student = studentService.findOne(id);
         ModelAndView modelAndView = new ModelAndView("/student/form");
         if (student != null) {
             modelAndView.addObject("student", student);
@@ -55,7 +79,7 @@ public class StudentController {
     @PostMapping("/update/{id}")
     public String updatePost(@PathVariable Long id,
                              @ModelAttribute Student student) {
-        Student detail = studentService.findById(id);
+        Student detail = studentService.findOne(id);
         if (detail != null) {
             student.setId(id);
             studentService.save(student);

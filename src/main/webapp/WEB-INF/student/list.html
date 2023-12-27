@@ -3,60 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <style>
-      table {
-        width: 600px;
-      }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-      table, a, h1 {
-        margin: auto;
-      }
-
-      table, tr, th, td {
-        border: 1px solid;
-        border-collapse: collapse;
-      }
-    </style>
 </head>
 <body>
-<a th:href="@{/api/students/create}">Create new</a>
-<form th:action="@{/api/students/search}" method="post">
-  <input type="text" name="name">
-  <button type="submit">Search</button>
-</form>
-<h1>List Student</h1>
-<a th:href="@{/api/students/sort}"><button>Sort</button></a>
-<a href="/api/students/gender?g=male"><button>Nam</button></a>
-<a th:href="@{'/api/students/gender?g=female'}"><button>Nữ</button></a>
-<a th:href="@{/api/students/sort}"><button>Khác</button></a>
-<table>
-  <tr>
-    <th>STT</th>
-    <th>Id</th>
-    <th>Name</th>
-    <th>Age</th>
-    <th>Gender</th>
-    <th>Address</th>
-    <th colspan="2">Action</th>
-  </tr>
-  <tr th:each="s, status : ${students}" >
-    <td th:text="${status.count}"></td>
-    <td th:text="${s.id}"></td>
-    <td th:text="${s.name}"></td>
-    <td th:text="${s.age}"></td>
-    <td th:text="${s.gender}"></td>
-    <td th:text="${s.address}"></td>
-    <td>
-      <a th:href="@{/api/students/update/{id}(id=${s.id})}">
-        <button>Update</button>
-      </a>
-    </td>
-    <td>
-      <a th:href="@{/api/students/delete/__${s.id}__}">
-        <button>Delete</button>
-      </a>
-    </td>
-  </tr>
-</table>
+<div class="container">
+    <h1>List students</h1>
+    <a th:href="@{/api/students/create}">Create new</a>
+    <table>
+        <thead>
+        <tr>
+            <th>STT</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Address</th>
+            <th>Classroom</th>
+            <th colspan="2">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="s, ss : ${students}">
+            <td th:text="${ss.count}"></td>
+            <td th:text="${s.name}"></td>
+            <td th:text="${s.age}"></td>
+            <td th:text="${s.gender}"></td>
+            <td th:text="${s.address}"></td>
+            <td th:text="${s.classroom.name}"></td>
+            <td>
+                <a class="btn btn-warning" th:href="@{/api/classroom/update/__${s.id}__}">
+                    Update
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-danger" th:href="@{/api/classroom/delete/__${s.id}__}">
+                    Delete
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

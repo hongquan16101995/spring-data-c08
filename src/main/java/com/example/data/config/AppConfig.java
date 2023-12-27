@@ -1,5 +1,7 @@
 package com.example.data.config;
 
+import com.example.data.formatter.ClassroomFormatter;
+import com.example.data.service.impl.ClassroomService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -17,6 +20,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -33,7 +37,7 @@ import java.util.Properties;
 @EnableJpaRepositories("com.example.data.repository")
 @EnableSpringDataWebSupport
 @ComponentScan("com.example.data")
-public class AppConfig implements ApplicationContextAware {
+public class AppConfig implements ApplicationContextAware, WebMvcConfigurer {
     private ApplicationContext applicationContext;
 
     @Override
@@ -109,5 +113,11 @@ public class AppConfig implements ApplicationContextAware {
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
         return properties;
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new ClassroomFormatter(
+                applicationContext.getBean(ClassroomService.class)));
     }
 }
