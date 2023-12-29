@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/api/classrooms")
 public class ClassroomController {
@@ -14,7 +16,8 @@ public class ClassroomController {
     private IClassroomService classroomService;
 
     @GetMapping
-    public ModelAndView findAll() {
+    public ModelAndView findAll(@SessionAttribute(name = "classrooms", required = false) Iterable<Classroom> classrooms) {
+        System.out.println(classrooms);
         ModelAndView modelAndView = new ModelAndView("/classroom/list");
         modelAndView.addObject("classrooms", classroomService.findAll());
         return modelAndView;
@@ -44,5 +47,10 @@ public class ClassroomController {
     public String updatePost(@ModelAttribute Classroom classroom) {
         classroomService.save(classroom);
         return "redirect:/api/classrooms";
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ModelAndView getError() {
+        return new ModelAndView("/error");
     }
 }

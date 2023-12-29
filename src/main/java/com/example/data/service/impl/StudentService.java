@@ -4,6 +4,8 @@ import com.example.data.model.Student;
 import com.example.data.repository.IStudentRepository;
 import com.example.data.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,5 +49,10 @@ public class StudentService implements IStudentService {
     @Override
     public List<Student> findAllByGender(String gender) {
         return studentRepository.findAllByGender(gender);
+    }
+
+    @Override
+    public Page<Student> findAllPage(Pageable pageable) {
+        return studentRepository.findAll(pageable);
     }
 }

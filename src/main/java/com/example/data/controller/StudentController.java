@@ -5,17 +5,18 @@ import com.example.data.model.Student;
 import com.example.data.service.IClassroomService;
 import com.example.data.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/api/students")
+@SessionAttributes("classrooms")
 public class StudentController {
     @Autowired
     private IStudentService studentService;
@@ -35,8 +36,16 @@ public class StudentController {
         return modelAndView;
     }
 
+    @GetMapping("/page")
+    public ModelAndView findAllPage(@PageableDefault(size = 3) Pageable pageable) {
+        ModelAndView modelAndView = new ModelAndView("/student/page");
+        modelAndView.addObject("students", studentService.findAllPage(pageable));
+        return modelAndView;
+    }
+
     @GetMapping("/create")
-    public ModelAndView createGet() {
+    public ModelAndView createGet(@SessionAttribute(name = "classrooms", required = false) Iterable<Classroom> classrooms) {
+        System.out.println(classrooms);
         ModelAndView modelAndView = new ModelAndView("/student/form");
         modelAndView.addObject("student", new Student());
         return modelAndView;
@@ -44,7 +53,7 @@ public class StudentController {
 
     @PostMapping("/create")
     public ModelAndView createPost(@Valid @ModelAttribute Student student,
-                             BindingResult bindingResult) {
+                                   BindingResult bindingResult) {
         if (bindingResult.hasFieldErrors()) {
             ModelAndView modelAndView = new ModelAndView("/student/form");
             modelAndView.addObject("student", student);
@@ -105,5 +114,10 @@ public class StudentController {
         ModelAndView modelAndView = new ModelAndView("/student/list");
         modelAndView.addObject("students", studentService.findAllByGender(gender));
         return modelAndView;
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ModelAndView getError() {
+        return new ModelAndView("/error");
     }
 }
